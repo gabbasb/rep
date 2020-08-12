@@ -4,7 +4,7 @@ Primary and Standby server configured for physical replication using official Po
   The host can connect to both the primary and the standby servers.  
   
   To build and run use the following commands:  
-  
+```sql
   docker container stop $(docker container ls -aq)  
   docker container prune -f  
   docker network prune -f  
@@ -24,9 +24,9 @@ Primary and Standby server configured for physical replication using official Po
   docker-compose ps  
   docker logs rep_pg_primary_1  
   docker logs rep_pg_standby_1  
-  
+```
   To test use thf following commands  
-  
+```sql
   abbas@ubuntu:~/Projects/rep$ psql -p 6432 postgres -U postgres -h localhost  
   psql (9.5.21, server 12.3 (Debian 12.3-1.pgdg100+1))  
   
@@ -53,3 +53,4 @@ Primary and Standby server configured for physical replication using official Po
   (3 rows)  
     
   postgres=# \q  
+```
