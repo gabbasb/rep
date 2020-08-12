@@ -1,0 +1,52 @@
+version: "2"
+services:
+  pg_primary:
+    image: rep_pg_primary:1.0
+    build:
+        context: ./primary
+    volumes:
+      - pg_data:/tmp/pri_data/
+    ports:
+      - 6432:6432
+    environment:
+      - PGPORT=6432
+      - PGDATA=/tmp/pri_data/
+      - POSTGRES_USER=postgres
+      - POSTGRES_HOST_AUTH_METHOD=trust
+      - POSTGRES_PASSWORD=abc123
+      - POSTGRES_DB=postgres
+      - PG_PRIMARY_HOST=127.0.0.1
+      - PG_PRIMARY_PORT=6432
+      - PG_STANDBY_HOST=127.0.0.1
+      - PG_STANDBY_PORT=7432
+      - PG_REP_USER=harry
+    networks:
+      default:
+        aliases:
+          - rep_in_pg
+  pg_standby:
+    image: rep_pg_standby:1.0
+    build:
+        context: ./standby
+    ports:
+      - 7432:7432
+    environment:
+      - PGPORT=7432
+      - PGDATA=/tmp/sb_data/
+      - POSTGRES_USER=postgres
+      - POSTGRES_HOST_AUTH_METHOD=trust
+      - POSTGRES_PASSWORD=abc123
+      - POSTGRES_DB=postgres
+      - PG_PRIMARY_HOST=127.0.0.1
+      - PG_PRIMARY_PORT=6432
+      - PG_STANDBY_HOST=127.0.0.1
+      - PG_STANDBY_PORT=7432
+      - PG_REP_USER=harry
+    links:
+      - pg_primary
+    networks:
+      default:
+        aliases:
+          - rep_in_pg
+volumes:
+  pg_data:
